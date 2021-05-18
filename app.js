@@ -26,10 +26,17 @@ app.get('/', async (req, res) => {
    res.render('index', {
      textes,
    })
+app.get('/about', (req,res) => {
+  res.render('about');
+})
   
 });
-app.get('/about', (req, res) => {
-  res.render('about');
+app.get('/textes/:id', async (req, res) => {
+  //res.render('about');
+  const text = await Text.findById(req.params.id)
+  res.render('text', {
+    text
+  })
 });
 app.get('/add_post', (req, res) => {
   res.render('add_post');
