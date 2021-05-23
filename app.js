@@ -1,54 +1,45 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const ejs = require('ejs');
-const path = require('path');
-const Text = require('./models/Text')
+const express = require("express");
+const ejs = require("ejs");
+const mongoose = require("mongoose");
+const methodOverride = require('method-override');
+const postController = require('./controllers/postController')
+const pageController = require('./controllers/pageController');
 
 const app = express();
 
 //connect DB
-mongoose.connect('mongodb://localhost/clean-blog-test-db', {
+mongoose.connect("mongodb://localhost/cleanblog-test-db", {
   useNewUrlParser: true,
-  useUnifiedTopology:true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
-//TEMPLATE ENGINE
-app.set('view engine', 'ejs');
+//Template Engine
+app.set("view engine", "ejs");
 
-//MIDDLEWEARS
-app.use(express.static('public'));
+//Middlewares
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-//ROUTES
-app.get('/', async (req, res) => {
-   const textes = await Text.find({})
-   res.render('index', {
-     textes,
-   })
-app.get('/about', (req,res) => {
-  res.render('about');
-})
-  
-});
-app.get('/textes/:id', async (req, res) => {
-  //res.render('about');
-  const text = await Text.findById(req.params.id)
-  res.render('text', {
-    text
+app.use(
+  methodOverride('_method', {
+    methods: ['POST', 'GET'],
   })
-});
-app.get('/add_post', (req, res) => {
-  res.render('add_post');
-});
+);
 
-app.post('/textes', async (req, res) => {
-  //form aksiyonunda yazdığım yönlendirmeyi yakalıyorum.
-  await Text.create(req.body)
-  res.redirect('/');
-});
+//Routes
+app.get('/', postController.getAllPosts);
+app.get('/posts/:id', postController.getPost);
+app.post('/posts', postController.createPost);
+app.put('/posts/:id', postController.updatePost);
+app.delete('/posts/:id', postController.deletePost);
 
-const port = 3000;
+app.get('/posts/edit/:id', pageController.getEditPage);
+app.get("/about", pageController.getAboutPage);
+app.get("/add_post", pageController.getAddPage);
+
+
+const port = 5000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda başlatıldı..`);
 });

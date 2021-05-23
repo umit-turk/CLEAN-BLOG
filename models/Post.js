@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 //create schema
-const TextSchema = new Schema({
+const PostSchema = new Schema({
   title: String,
   detail: String,
   dateCreated: {
@@ -11,6 +11,6 @@ const TextSchema = new Schema({
   },
 });
 
-const Text = mongoose.model('Text', TextSchema);
+const Post = mongoose.model('Post', PostSchema);
 
-module.exports = Text;
+module.exports = Post;
