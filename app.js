@@ -8,7 +8,7 @@ const pageController = require('./controllers/pageController');
 const app = express();
 
 //connect DB
-mongoose.connect("mongodb://localhost/cleanblog-test-db", {
+mongoose.connect("mongodb+srv://umit:imjKsQc7qv9ZcmCw@cluster0.5oewu.mongodb.net/clean-db?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -39,7 +39,7 @@ app.get("/about", pageController.getAboutPage);
 app.get("/add_post", pageController.getAddPage);
 
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda başlatıldı..`);
 });
